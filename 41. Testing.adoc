@@ -3,28 +3,28 @@
 == Testing
 Spring Boot provides a number of utilities and annotations to help when testing your
 application. Test support is provided by two modules; `spring-boot-test` contains core
-items, and `spring-boot-test-autoconfigure` supports auto-configuration for tests.
+items/核心项目, and `spring-boot-test-autoconfigure` supports auto-configuration for tests/测试的自动配置.
 
-Most developers will just use the `spring-boot-starter-test` '`Starter`' which
+Most developers will just use the `spring-boot-starter-test` '`Starter/启动器/依赖模块化`' which
 imports both Spring Boot test modules as well has JUnit, AssertJ, Hamcrest and a number
 of other useful libraries.
 
 
 
 [[boot-features-test-scope-dependencies]]
-=== Test scope dependencies
+=== Test scope dependencies/测试范围的依赖模块
 If you use the
 `spring-boot-starter-test` '`Starter`' (in the `test` `scope`), you will find
 the following provided libraries:
 
-* http://junit.org[JUnit] -- The de-facto standard for unit testing Java applications.
+* http://junit.org[JUnit] -- The de-facto standard for unit testing Java applications/单元测试Java应用程序的事实标准.
 * {spring-reference}/#integration-testing[Spring Test] & Spring Boot Test --
-  Utilities and integration test support for Spring Boot applications.
-* http://joel-costigliola.github.io/assertj/[AssertJ] -- A fluent assertion library.
+  Utilities and integration test support for Spring Boot applications/支持Spring Boot应用程序的集成测试.
+* http://joel-costigliola.github.io/assertj/[AssertJ] -- A fluent assertion library/流式的断言库.
 * http://hamcrest.org/JavaHamcrest/[Hamcrest] -- A library of matcher objects (also known
-  as constraints or predicates).
-* http://mockito.org/[Mockito] -- A Java mocking framework.
-* https://github.com/skyscreamer/JSONassert[JSONassert] -- An assertion library for JSON.
+  as constraints or predicates)/匹配对象库(约束或谓词).
+* http://mockito.org/[Mockito] -- A Java mocking framework/Java的模拟框架.
+* https://github.com/skyscreamer/JSONassert[JSONassert] -- An assertion library for JSON/JSON的断言库.
 * https://github.com/jayway/JsonPath[JsonPath] -- XPath for JSON.
 
 
@@ -34,25 +34,25 @@ By default, Spring Boot uses Mockito 1.x. However it's also possible to use 2.x 
 wish.
 ====
 
-These are common libraries that we generally find useful when writing tests. You are free
+These are common libraries that we generally find useful when writing tests/发现对编写测试有用的公共库. You are free
 to add additional test dependencies of your own if these don't suit your needs.
 
 
 
 [[boot-features-testing-spring-applications]]
-=== Testing Spring applications
+=== Testing Spring applications/测试Spring应用程序
 One of the major advantages of dependency injection is that it should make your code
-easier to unit test. You can simply instantiate objects using the `new` operator without
-even involving Spring. You can also use _mock objects_ instead of real dependencies.
+easier to unit test/依赖注入的主要优势之一是应该让你的代码更易于进行单元测试. You can simply instantiate objects using the `new` operator without
+even involving Spring. You can also use _mock objects_ instead of real dependencies/使用模拟对象，而不是真正的依赖组件.
 
-Often you need to move beyond '`unit testing`' and start '`integration testing`' (with
-a Spring `ApplicationContext` actually involved in the process). It's useful to be able
+Often you need to move beyond '`unit testing`' and start '`integration testing`'/开始集成测试 (with
+a Spring `ApplicationContext/应用上下文` actually involved in the process). It's useful to be able
 to perform integration testing without requiring deployment of your application or
-needing to connect to other infrastructure.
+needing to connect to other infrastructure/无需部署应用程序和连接到其他基础设施就能够执行集成测试，是非常有用的.
 
 The Spring Framework includes a dedicated test module for just such integration testing.
 You can declare a dependency directly to `org.springframework:spring-test` or use the
-`spring-boot-starter-test` '`Starter`' to pull it in transitively.
+`spring-boot-starter-test` '`Starter`' to pull it in transitively/Spring框架包括一个专门的测试模块，用于集成测试.
 
 If you have not used the `spring-test` module before you should start by reading the
 {spring-reference}/#testing[relevant section] of the Spring Framework reference
@@ -61,8 +61,8 @@ documentation.
 
 
 [[boot-features-testing-spring-boot-applications]]
-=== Testing Spring Boot applications
-A Spring Boot application is just a Spring `ApplicationContext`, so nothing very special
+=== Testing Spring Boot applications/测试Spring Boot应用程序
+A Spring Boot application is just a Spring `ApplicationContext`/Spring Boot应用程序只是一个Spring应用上下文, so nothing very special
 has to be done to test it beyond what you would normally do with a vanilla Spring context.
 One thing to watch out for though is that the external properties, logging and other
 features of Spring Boot are only installed in the context by default if you use
@@ -72,6 +72,7 @@ Spring Boot provides a `@SpringBootTest` annotation which can be used as an
 alternative to the standard `spring-test` `@ContextConfiguration` annotation when you need
 Spring Boot features. The annotation works by creating the `ApplicationContext` used
 in your tests via `SpringApplication`.
+需要Spring Boot功能：@ContextConfiguration => @SpringBootTest
 
 You can use the `webEnvironment` attribute of `@SpringBootTest` to further refine
 how your tests will run:
@@ -100,11 +101,12 @@ provided for testing more specific slices of an application. See below for detai
 
 TIP: Don't forget to also add `@RunWith(SpringRunner.class)` to your test, otherwise
 the annotations will be ignored.
+提示：别忘了添加`@RunWith(SpringRunner.class)`注解到测试类，否则注解将被忽略。
 
 
 
 [[boot-features-testing-spring-boot-applications-detecting-config]]
-==== Detecting test configuration
+==== Detecting test configuration/检测测试配置
 If you're familiar with the Spring Test Framework, you may be used to using
 `@ContextConfiguration(classes=...)` in order to specify which Spring `@Configuration`
 to load. Alternatively, you might have often used nested `@Configuration` classes within
@@ -118,6 +120,7 @@ The search algorithm works up from the package that contains the test until it f
 `@SpringBootApplication` or `@SpringBootConfiguration` annotated class. As long as you've
 <<using-boot-structuring-your-code, structured your code>> in a sensible way your main
 configuration is usually found.
+搜索算法
 
 If you want to customize the primary configuration, you can use a nested
 `@TestConfiguration` class. Unlike a nested `@Configuration` class which would be used
@@ -131,7 +134,7 @@ potentially time consuming process of loading the context will only happen once.
 
 
 [[boot-features-testing-spring-boot-applications-excluding-config]]
-==== Excluding test configuration
+==== Excluding test configuration/排除测试配置
 If your application uses component scanning, for example if you use
 `@SpringBootApplication` or `@ComponentScan`, you may find top-level configuration classes
 created only for specific tests accidentally get picked up everywhere.
@@ -183,18 +186,18 @@ include::{code-examples}/test/web/RandomPortExampleTests.java[tag=test-random-po
 
 
 [[boot-features-testing-spring-boot-applications-mocking-beans]]
-==== Mocking and spying beans
+==== Mocking and spying beans/模拟和监视组件
 It's sometimes necessary to mock certain components within your application context when
 running tests. For example, you may have a facade over some remote service that's
 unavailable during development. Mocking can also be useful when you want to simulate
 failures that might be hard to trigger in a real environment.
 
 Spring Boot includes a `@MockBean` annotation that can be used to define a Mockito mock
-for a bean inside your `ApplicationContext`. You can use the annotation to add new beans,
+for a bean inside your `ApplicationContext`/`@MockBean`注解可用于为应用上下文中的组件定义Mockito模拟. You can use the annotation to add new beans,
 or replace a single existing bean definition. The annotation can be used directly on test
 classes, on fields within your test, or on `@Configuration` classes and fields. When used
 on a field, the instance of the created mock will also be injected. Mock beans are
-automatically reset after each test method.
+automatically reset after each test method/模拟的组件在每个测试方法后将自动被重置.
 
 Here's a typical example where we replace an existing `RemoteService` bean with a mock
 implementation:

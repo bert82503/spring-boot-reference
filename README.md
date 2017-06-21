@@ -2,7 +2,7 @@
 
 This file serves as your book's preface, a great place to describe your book's content and ideas.
 
-《Spring Boot参考指南》翻译笔记📒，避免PDF格式的参考指南版本升级而丢失先前注释的重点内容，解决重复性做笔记问题。
+《Spring Boot参考指南》翻译笔记，避免PDF格式的参考指南版本升级而丢失先前注释的重点内容，解决重复性做笔记的问题。
 
 官方文档：[1.5.4.RELEASE](http://docs.spring.io/spring-boot/docs/1.5.4.RELEASE/reference/html/ "Spring Boot Reference Guide 1.5.4.RELEASE")
 
