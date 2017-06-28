@@ -1,42 +1,57 @@
 
 
 [[boot-features-developing-auto-configuration]]
-== Creating your own auto-configuration
+== Creating your own auto-configuration/创建自己的自动配置
 If you work in a company that develops shared libraries, or if you work on an open-source
 or commercial library, you might want to develop your own auto-configuration.
 Auto-configuration classes can be bundled in external jars and still be picked-up by
 Spring Boot.
+如果开发共享库、开源库，可能想开发自己的自动配置。
+自动配置类可打包到外部JAR中，并且可被Spring Boot识别。
 
 Auto-configuration can be associated to a "starter" that provides the auto-configuration
 code as well as the typical libraries that you would use with it. We will first cover what
 you need to know to build your own auto-configuration and we will move on to the
 <<boot-features-custom-starter,typical steps required to create a custom starter>>.
+自动配置可以关联到一个"starter/启动器/组件模块化"，用于提供自动配置的代码及需要引用的库列表。
+首先讲解构建自己的自动配置需要知道哪些内容，然后讲解创建自定义starter的常见步骤。
 
 TIP: A https://github.com/snicoll-demos/spring-boot-master-auto-configuration[demo project]
 is available to showcase how you can create a starter step by step.
+提示：可参考 https://github.com/snicoll-demos/spring-boot-master-auto-configuration[demo工程]
+了解如何一步一步创建一个starter。
 
 
 
 [[boot-features-understanding-auto-configured-beans]]
-=== Understanding auto-configured beans
+=== Understanding auto-configured beans/理解自动配置的组件
 Under the hood, auto-configuration is implemented with standard `@Configuration` classes.
 Additional `@Conditional` annotations are used to constrain when the auto-configuration
 should apply. Usually auto-configuration classes use `@ConditionalOnClass` and
 `@ConditionalOnMissingBean` annotations. This ensures that auto-configuration only applies
 when relevant classes are found and when you have not declared your own `@Configuration`.
+从底层来讲，自动配置是通过标准的`@Configuration`类实现的。
+此外，`@Conditional`注解用来约束自动配置应用/生效的条件。
+通常，自动配置类需要使用`@ConditionalOnClass`和`@ConditionalOnMissingBean`注解，
+这是为了确保只有在相关的类被发现及未声明自定义的`@Configuration`时才应用自动配置。
 
 You can browse the source code of {sc-spring-boot-autoconfigure}[`spring-boot-autoconfigure`]
 to see the `@Configuration` classes that we provide (see the
 {github-code}/spring-boot-autoconfigure/src/main/resources/META-INF/spring.factories[`META-INF/spring.factories`]
 file).
+具体可以查看{sc-spring-boot-autoconfigure}[`spring-boot-autoconfigure`]源码中的
+`@Configuration`类（
+{github-code}/spring-boot-autoconfigure/src/main/resources/META-INF/spring.factories[`META-INF/spring.factories`] 文件）。
 
 
 
 [[boot-features-locating-auto-configuration-candidates]]
-=== Locating auto-configuration candidates
+=== Locating auto-configuration candidates/定位自动配置候选者
 Spring Boot checks for the presence of a `META-INF/spring.factories` file within your
 published jar. The file should list your configuration classes under the
 `EnableAutoConfiguration` key.
+Spring Boot会检查你发布的JAR中是否存在`META-INF/spring.factories`文件，
+该文件中以`EnableAutoConfiguration`为key的属性应该列出你的配置类：
 
 [indent=0]
 ----
@@ -51,107 +66,141 @@ You can use the
 annotations if your configuration needs to be applied in a specific order. For example, if
 you provide web-specific configuration, your class may need to be applied after
 `WebMvcAutoConfiguration`.
+可以使用
+{sc-spring-boot-autoconfigure}/AutoConfigureAfter.{sc-ext}[`@AutoConfigureAfter`] 或
+{sc-spring-boot-autoconfigure}/AutoConfigureBefore.{sc-ext}[`@AutoConfigureBefore`]
+注解**为配置类指定特定的顺序**。
 
 If you want to order certain auto-configurations that shouldn't have any direct
 knowledge of each other, you can also use `@AutoconfigureOrder`. That annotation has the
 same semantic as the regular `@Order` annotation but provides a dedicated order for
 auto-configuration classes.
 
-[NOTE]
+[NOTE/注意]
 ====
 Auto-configurations have to be loaded that way _only_. Make sure that they are defined in
 a specific package space and that they are never the target of component scan in
 particular.
+自动配置类只能通过这种方式被加载，确保它们定义在一个特殊的包空间中，
+特别是不能成为组件扫描的目标。
 ====
 
 
 
 [[boot-features-condition-annotations]]
-=== Condition annotations
+=== Condition annotations/条件注解
 You almost always want to include one or more `@Conditional` annotations on your
 auto-configuration class. The `@ConditionalOnMissingBean` is one common example that is
 used to allow developers to '`override`' auto-configuration if they are not happy with
 your defaults.
+你几乎总是需要在自己的自动配置类里添加一个或更多的`@Conditional`注解。
+`@ConditionalOnMissingBean`注解是一个常见的示例，开发者可以用它覆盖自动配置类提供的默认行为。
 
 Spring Boot includes a number of `@Conditional` annotations that you can reuse in your own
 code by annotating `@Configuration` classes or individual `@Bean` methods.
+Spring Boot包含很多`@Conditional`注解，你可以在自己的代码中通过注解
+`@Configuration`类或单独的`@Bean`方法来重用它们。
 
 
 
 [[boot-features-class-conditions]]
-==== Class conditions
+==== Class conditions/类条件
 The `@ConditionalOnClass` and `@ConditionalOnMissingClass` annotations allows
 configuration to be included based on the presence or absence of specific classes. Due to
 the fact that annotation metadata is parsed using http://asm.ow2.org/[ASM] you can
 actually use the `value` attribute to refer to the real class, even though that class
 might not actually appear on the running application classpath. You can also use the
 `name` attribute if you prefer to specify the class name using a `String` value.
+`@ConditionalOnClass`和`@ConditionalOnMissingClass`注解可以根据特定类是否出现来决定配置的包含，
+由于注解元数据使用 http://asm.ow2.org/[ASM] 解析，所以可以使用`value`属性来引用真实的类，
+即使该类没有出现在运行应用的类路径下，也可以使用`name`属性，如果你倾向于使用字符串作为类名。
 
-[TIP]
+[TIP/提示]
 ====
 If you are using `@ConditionalOnClass` or `@ConditionalOnMissingClass` as a part of a
 meta-annotation to compose your own composed annotations you must use `name` as referring
 to the class in such a case is not handled.
+如果使用`@ConditionalOnClass`或`@ConditionalOnMissingClass`作为元注解的一部分，
+用来组合你自己的组合注解，必须使用`name`属性作为类型的引用。
 ====
 
 
 
 [[boot-features-bean-conditions]]
-==== Bean conditions
+==== Bean conditions/组件条件
 The `@ConditionalOnBean` and `@ConditionalOnMissingBean` annotations allow a bean
 to be included based on the presence or absence of specific beans. You can use the `value`
 attribute to specify beans by type, or `name` to specify beans by name. The `search`
 attribute allows you to limit the `ApplicationContext` hierarchy that should be considered
 when searching for beans.
+`@ConditionalOnBean`和`@ConditionalOnMissingBean`注解可以根据特定类是否存在决定组件的包含，
+可以使用`value`属性指定特定类型的组件，也可以使用`name`指定特定名称的组件。
+`search`属性用来限制搜索组件时，需要考虑`ApplicationContext`层次。
 
 TIP: You need to be very careful about the order that bean definitions are added as these
 conditions are evaluated based on what has been processed so far. For this reason,
 we recommend only using `@ConditionalOnBean` and `@ConditionalOnMissingBean` annotations
 on auto-configuration classes (since these are guaranteed to load after any user-define
 beans definitions have been added).
+提示：需要注意组件定义添加的顺序，因为这些条件的计算是基于目前处理的内容的。
+出于这个原因，*推荐在自动配置类上只使用`@ConditionalOnBean`和`@ConditionalOnMissingBean`注解*
+（即使保证它们在其他用户定义的组件后加载）。
 
 NOTE: `@ConditionalOnBean` and `@ConditionalOnMissingBean` do not prevent `@Configuration`
 classes from being created. Using these conditions at the class level is equivalent to
 marking each contained `@Bean` method with the annotation.
+注意：`@ConditionalOnBean`和`@ConditionalOnMissingBean`
+不会阻止`@Configuration`类的创建，在类级别使用这些条件跟使用注解标记每个`@Bean`方法是等价的。
 
 
 
 [[boot-features-property-conditions]]
-==== Property conditions
+==== Property conditions/属性条件
 The `@ConditionalOnProperty` annotation allows configuration to be included based on a
 Spring Environment property. Use the `prefix` and `name` attributes to specify the
 property that should be checked. By default any property that exists and is not equal to
 `false` will be matched. You can also create more advanced checks using the `havingValue`
 and `matchIfMissing` attributes.
+`@ConditionalOnProperty`注解可以根据一个`Environment`属性来决定是否包含配置，
+使用`prefix`和`name`属性指定要检查的配置。
+默认情况下，任何存在的只要不是`false`的属性都会匹配，也可以使用
+`havingValue`和`matchIfMissing`属性创建更高级的检测。
 
 
 
 [[boot-features-resource-conditions]]
-==== Resource conditions
+==== Resource conditions/资源条件
 The `@ConditionalOnResource` annotation allows configuration to be included only when a
 specific resource is present. Resources can be specified using the usual Spring
 conventions, for example, `file:/home/user/test.dat`.
+`@ConditionalOnResource`注解只在特定资源出现时才会包含配置，
+可以使用常见的Spring约定命名资源，例如`file:/home/user/test.dat`。
 
 
 
 [[boot-features-web-application-conditions]]
-==== Web application conditions
+==== Web application conditions/Web应用条件
 The `@ConditionalOnWebApplication` and `@ConditionalOnNotWebApplication` annotations
 allow configuration to be included depending on whether the application is a 'web
 application'. A web application is any application that is using a Spring
 `WebApplicationContext`, defines a `session` scope or has a `StandardServletEnvironment`.
+`@ConditionalOnWebApplication`和`@ConditionalOnNotWebApplication`注解可以根据应用
+是否为`web应用`来决定是否包含配置。Web应用是任何使用`WebApplicationContext`，
+定义一个`session`作用域，或有一个`StandardServletEnvironment`的应用。
 
 
 
 [[boot-features-spel-conditions]]
-==== SpEL expression conditions
+==== SpEL expression conditions/SpEL表达式条件
 The `@ConditionalOnExpression` annotation allows configuration to be included based on the
 result of a {spring-reference}/#expressions[SpEL expression].
+`@ConditionalOnExpression`注解可以根据 {spring-reference}/#expressions[SpEL表达式]
+结果来决定是否包含配置。
 
 
 
 [[boot-features-custom-starter]]
-=== Creating your own starter
+=== Creating your own starter/创建自己的starter
 A full Spring Boot starter for a library may contain the following components:
 
 * The `autoconfigure` module that contains the auto-configuration code.
@@ -162,55 +211,78 @@ A full Spring Boot starter for a library may contain the following components:
 TIP: You may combine the auto-configuration code and the dependency management in a single
 module if you don't need to separate those two concerns.
 
+一个完整的Spring Boot starter可能包含以下组件：
+* `autoconfigure`模块，包含自动配置类的代码。
+* `starter`模块，提供自动配置模块及其他有用的依赖。简而言之，添加本starter就能开始使用该库。
+
+提示：如果不需要将它们分离开来，可以将自动配置代码和依赖管理放到一个单一模块中。
 
 
 [[boot-features-custom-starter-naming]]
-==== Naming
+==== Naming/命名
 Please make sure to provide a proper namespace for your starter. Do not start your module
 names with `spring-boot`, even if you are using a different Maven groupId. We may offer an
 official support for the thing you're auto-configuring in the future.
+请确保你的starter提供一个合适的命名空间(namespace)。模块名不要以`spring-boot`作为开头，
+尽管使用一个不同的groupId，未来我们可能会为你正在做的自动配置提供官方支持。
 
 Here is a rule of thumb. Let's assume that you are creating a starter for "acme", name the
 auto-configure module `acme-spring-boot-autoconfigure` and the starter
 `acme-spring-boot-starter`. If you only have one module combining the two, use
 `acme-spring-boot-starter`.
+这里是经验之谈，假设你正在为"acme"创建一个starter，命名自动配置模块为
+`acme-spring-boot-autoconfigure`，命名starter为`acme-spring-boot-starter`。
+如果只有一个模块结合它们，通常会使用`acme-spring-boot-starter`。
 
 Besides, if your starter provides configuration keys, use a proper namespace for them. In
 particular, do not include your keys in the namespaces that Spring Boot uses (e.g.
 `server`, `management`, `spring`, etc). These are "ours" and we may improve/modify them
 in the future in such a way it could break your things.
+此外，如果你的starter提供配置键，需要为它们提供一个合适的命名空间，
+特别是不要使用Spring Boot的命名空间(比如，`server`、`management`、`spring`等)，
+这些是属于Spring Boot的，我们可能会在将来以相同方式改进/修改它们，这可能会破坏你的东西。
 
 Make sure to
 <<appendix-configuration-metadata#configuration-metadata-annotation-processor,trigger
 meta-data generation>> so that IDE assistance is available for your keys as well. You
 may want to review the generated meta-data (`META-INF/spring-configuration-metadata.json`)
 to make sure your keys are properly documented.
+确保<<appendix-configuration-metadata#configuration-metadata-annotation-processor,触发
+元数据生成>>，这样IDE辅助也就可以用于你的键了。你可能想检查生成的元数据
+(`META-INF/spring-configuration-metadata.json`)，以确保键被正确地文档化。
 
 
 
 [[boot-features-custom-starter-module-autoconfigure]]
-==== Autoconfigure module
+==== Autoconfigure module/自动配置模块
 The autoconfigure module contains everything that is necessary to get started with the
 library. It may also contain configuration keys definition (`@ConfigurationProperties`)
 and any callback interface that can be used to further customize how the components are
 initialized.
+自动配置模块包含使用该库需要的任何东西，它可能还包含配置的键列表定义(`@ConfigurationProperties`)
+和用于定义组件如何初始化的回调接口。
 
 TIP: You should mark the dependencies to the library as optional so that you can include
 the autoconfigure module in your projects more easily. If you do it that way, the library
 won't be provided and Spring Boot will back off by default.
+提示：应该将该库的依赖标记为可选的，这样在项目中添加该自动配置模块就更容易了。
+如果你这样做，该库将不会提供，Spring Boot会回退到默认设置。
 
 
 
 [[boot-features-custom-starter-module-starter]]
-==== Starter module
+==== Starter module/启动器模块
 The starter is an empty jar, really. Its only purpose is to provide the necessary
 dependencies to work with the library; see it as an opinionated view of what is required
 to get started.
+starter模块实际是一个空的JAR，它的目的是提供使用该库所需的必要依赖。
 
 Do not make assumptions about the project in which your starter is added. If the library
 you are auto-configuring typically requires other starters, mention them as well. Providing
 a proper set of _default_ dependencies may be hard if the number of optional dependencies
 is high as you should avoid bringing unnecessary dependencies for a typical usage of the
 library.
+不要对添加你的starter项目做任何假设，如果你正在自动配置的库需要其他starters，一定要提到它。
+提供一个合适的默认依赖集可能比较困难，特别是存在大量可选依赖时，你应该避免引入任何非必需的依赖。
 
 
