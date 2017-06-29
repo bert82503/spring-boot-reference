@@ -192,7 +192,7 @@ Javadoc] for full details.
 
 
 [[boot-features-application-events-and-listeners]]
-=== Application events and listeners
+=== Application events and listeners/应用事件和监听器
 In addition to the usual Spring Framework events, such as
 {spring-javadoc}/context/event/ContextRefreshedEvent.{dc-ext}[`ContextRefreshedEvent`],
 a `SpringApplication` sends some additional application events.
@@ -227,6 +227,14 @@ Application events are sent in the following order, as your application runs:
 . An `ApplicationReadyEvent` is sent after the refresh and any related callbacks have
   been processed to indicate the application is ready to service requests.
 . An `ApplicationFailedEvent` is sent if there is an exception on startup.
+
+当你的应用程序运行时，应用事件按以下顺序发送：
+
+* `ApplicationStartingEvent`：在应用程序运行开始时，但在任何处理之前，除监听器和初始化器注册之外。
+* `ApplicationEnvironmentPreparedEvent`：用于应用上下文的环境(`Environment`)已准备，但在创建上下文之前。
+* `ApplicationPreparedEvent`：在上下文刷新开始之前，但在组件定义已加载之后。
+* `ApplicationReadyEvent`：在上下文刷新和任何关联的回调已处理之后，表示应用程序可以服务请求。
+* `ApplicationFailedEvent`：在启动时出现了异常。
 
 TIP: You often won't need to use application events, but it can be handy to know that they
 exist. Internally, Spring Boot uses events to handle a variety of tasks.
