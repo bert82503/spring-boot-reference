@@ -8,29 +8,34 @@ Various properties can be specified inside your `application.properties`/`applic
 file or as command line switches. This section provides a list of common Spring Boot
 properties and references to the underlying classes that consume them.
 
-NOTE: Property contributions can come from additional jar files on your classpath so
-you should not consider this an exhaustive list. It is also perfectly legit to define
-your own properties.
+本节提供公共的Boot属性和对使用它们的底层类的引用列表。
 
-WARNING: This sample file is meant as a guide only. Do **not** copy/paste the entire
+NOTE/注意: Property contributions can come from additional jar files on your classpath so
+you should not consider this an exhaustive list. It is also perfectly legit to define
+your own properties. 定义自己的属性也是完全合法的。
+
+WARNING/警告: This sample file is meant as a guide only. Do **not** copy/paste the entire
 content into your application; rather pick only the properties that you need.
+这个示例文件仅具有指导意义。
+不要复制/粘贴整个内容到你的应用程序中，而是只选择所需的属性。
 
 
 [source,properties,indent=0,subs="verbatim,attributes,macros"]
 ----
 	# ===================================================================
-	# COMMON SPRING BOOT PROPERTIES
+	# COMMON SPRING BOOT PROPERTIES/公共的Boot属性列表
 	#
 	# This sample file is provided as a guideline. Do NOT copy it in its
 	# entirety to your own application.               ^^^
+	# 这是作为一个准则提供的示例文件，不要将它的全部内容复制到你自己的应用程序中。
 	# ===================================================================
 
 
 	# ----------------------------------------
-	# CORE PROPERTIES
+	# CORE PROPERTIES/核心属性列表
 	# ----------------------------------------
 
-	# BANNER
+	# BANNER/横幅
 	banner.charset=UTF-8 # Banner file encoding.
 	banner.location=classpath:banner.txt # Banner file location.
 	banner.image.location=classpath:banner.gif # Banner image file location (jpg/png can also be used).
@@ -39,20 +44,20 @@ content into your application; rather pick only the properties that you need.
 	banner.image.margin= # Left hand image margin in chars (default 2)
 	banner.image.invert= # If images should be inverted for dark terminal themes (default false)
 
-	# LOGGING
-	logging.config= # Location of the logging configuration file. For instance `classpath:logback.xml` for Logback
+	# LOGGING/日志记录
+	logging.config= # Location of the logging configuration file/日志配置文件的位置. For instance `classpath:logback.xml` for Logback
 	logging.exception-conversion-word=%wEx # Conversion word used when logging exceptions.
-	logging.file= # Log file name. For instance `myapp.log`
-	logging.level.*= # Log levels severity mapping. For instance `logging.level.org.springframework=DEBUG`
-	logging.path= # Location of the log file. For instance `/var/log`
-	logging.pattern.console= # Appender pattern for output to the console. Only supported with the default logback setup.
-	logging.pattern.file= # Appender pattern for output to the file. Only supported with the default logback setup.
-	logging.pattern.level= # Appender pattern for log level (default %5p). Only supported with the default logback setup.
-	logging.register-shutdown-hook=false # Register a shutdown hook for the logging system when it is initialized.
+	logging.file= # Log file name/日志文件名. For instance `myapp.log`
+	logging.level.*= # Log levels severity mapping/严重性映射的日志级别. For instance `logging.level.org.springframework=DEBUG`
+	logging.path= # Location of the log file/日志文件的位置. For instance `/var/log`
+	logging.pattern.console= # Appender pattern for output to the console/输出到控制台的附加器模式. Only supported with the default logback setup.
+	logging.pattern.file= # Appender pattern for output to the file/输出到文件的附加器模式. Only supported with the default logback setup.
+	logging.pattern.level= # Appender pattern for log level (default %5p)/日志级别的附加器模式. Only supported with the default logback setup.
+	logging.register-shutdown-hook=false # Register a shutdown hook for the logging system when it is initialized/在初始化时为日志系统注册一个关闭钩子.
 
-	# AOP
+	# AOP/面向切面编程
 	spring.aop.auto=true # Add @EnableAspectJAutoProxy.
-	spring.aop.proxy-target-class=false # Whether subclass-based (CGLIB) proxies are to be created (true) as opposed to standard Java interface-based proxies (false).
+	spring.aop.proxy-target-class=false # Whether subclass-based (CGLIB) proxies are to be created (true) as opposed to standard Java interface-based proxies (false)/CGLIB：创建基于子类的代理类 vs 标准的Java基于接口的代理类.
 
 	# IDENTITY ({sc-spring-boot}/context/ContextIdApplicationContextInitializer.{sc-ext}[ContextIdApplicationContextInitializer])
 	spring.application.index= # Application index.
@@ -62,13 +67,13 @@ content into your application; rather pick only the properties that you need.
 	spring.application.admin.enabled=false # Enable admin features for the application.
 	spring.application.admin.jmx-name=org.springframework.boot:type=Admin,name=SpringApplication # JMX name of the application admin MBean.
 
-	# AUTO-CONFIGURATION
+	# AUTO-CONFIGURATION/自动配置
 	spring.autoconfigure.exclude= # Auto-configuration classes to exclude.
 
 	# SPRING CORE
 	spring.beaninfo.ignore=true # Skip search of BeanInfo classes.
 
-	# SPRING CACHE ({sc-spring-boot-autoconfigure}/cache/CacheProperties.{sc-ext}[CacheProperties])
+	# SPRING CACHE/缓存框架 ({sc-spring-boot-autoconfigure}/cache/CacheProperties.{sc-ext}[CacheProperties])
 	spring.cache.cache-names= # Comma-separated list of cache names to create if supported by the underlying cache manager.
 	spring.cache.caffeine.spec= # The spec to use to create caches. Check CaffeineSpec for more details on the spec format.
 	spring.cache.couchbase.expiration=0 # Entry expiration in milliseconds. By default the entries never expire.
@@ -79,7 +84,7 @@ content into your application; rather pick only the properties that you need.
 	spring.cache.jcache.provider= # Fully qualified name of the CachingProvider implementation to use to retrieve the JSR-107 compliant cache manager. Only needed if more than one JSR-107 implementation is available on the classpath.
 	spring.cache.type= # Cache type, auto-detected according to the environment by default.
 
-	# SPRING CONFIG - using environment property only ({sc-spring-boot}/context/config/ConfigFileApplicationListener.{sc-ext}[ConfigFileApplicationListener])
+	# SPRING CONFIG/配置 - using environment property only ({sc-spring-boot}/context/config/ConfigFileApplicationListener.{sc-ext}[ConfigFileApplicationListener])
 	spring.config.location= # Config file locations.
 	spring.config.name=application # Config file name.
 
@@ -141,7 +146,7 @@ content into your application; rather pick only the properties that you need.
 
 
 	# ----------------------------------------
-	# WEB PROPERTIES
+	# WEB PROPERTIES/Web应用属性列表
 	# ----------------------------------------
 
 	# EMBEDDED SERVER CONFIGURATION ({sc-spring-boot-autoconfigure}/web/ServerProperties.{sc-ext}[ServerProperties])
