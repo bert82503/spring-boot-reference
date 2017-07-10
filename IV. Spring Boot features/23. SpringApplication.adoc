@@ -2,10 +2,12 @@
 
 
 [[boot-features-spring-application]]
-== SpringApplication
+== SpringApplication/Spring应用程序启动类
 The `SpringApplication` class provides a convenient way to bootstrap a Spring application
 that will be started from a `main()` method. In many situations you can just delegate to
 the static `SpringApplication.run` method:
+
+`SpringApplication`类提供一种启动Spring应用程序的简便方式，从`main()`方法开始。
 
 [source,java,indent=0]
 ----
@@ -38,11 +40,14 @@ such as the user that launched the application.
 
 
 [boot-features-startup-failure]
-=== Startup failure
+=== Startup failure/启动失败
 If your application fails to start, registered `FailureAnalyzers` get a chance to provide
 a dedicated error message and a concrete action to fix the problem. For instance if you
 start a web application on port `8080` and that port is already in use, you should see
 something similar to the following:
+
+如果你的应用程序启动失败，注册的`FailureAnalyzers`有机会提供一个专门的错误信息和
+具体的行动来解决问题。
 
 [indent=0]
 ----
@@ -79,7 +84,7 @@ For instance, if you are running your application using `java -jar` you can enab
 
 
 [[boot-features-banner]]
-=== Customizing the Banner
+=== Customizing the Banner/自定义横幅
 The banner that is printed on start up can be changed by adding a `banner.txt` file
 to your classpath, or by setting `banner.location` to the location of such a file.
 If the file has an unusual encoding you can set `banner.charset` (default is `UTF-8`).
@@ -87,9 +92,9 @@ In addition to a text file, you can also add a `banner.gif`, `banner.jpg` or `ba
 image file to your classpath, or set a `banner.image.location` property. Images will be
 converted into an ASCII art representation and printed above any text banner.
 
-Inside your `banner.txt` file you can use any of the following placeholders:
+Inside your `banner.txt` file you can use any of the following placeholders/占位符:
 
-.Banner variables
+.Banner variables/横幅变量表
 |===
 | Variable | Description
 
@@ -117,8 +122,8 @@ brackets and prefixed with `v`). For example `(v{spring-boot-version})`.
 `Implementation-Title: MyApp` is printed as `MyApp`.
 |===
 
-TIP: The `SpringApplication.setBanner(...)` method can be used if you want to generate
-a banner programmatically. Use the `org.springframework.boot.Banner` interface and
+TIP/提示: The `SpringApplication.setBanner(...)` method can be used if you want to generate
+a banner programmatically/编程式生成横幅. Use the `org.springframework.boot.Banner` interface and
 implement your own `printBanner()` method.
 
 You can also use the `spring.main.banner-mode` property to determine if the banner has
@@ -142,9 +147,11 @@ banner in your application.
 ====
 
 [[boot-features-customizing-spring-application]]
-=== Customizing SpringApplication
+=== Customizing SpringApplication/自定义SpringApplication
 If the `SpringApplication` defaults aren't to your taste you can instead create a local
 instance and customize it. For example, to turn off the banner you would write:
+
+默认值并不适合你的口味，可以创建一个本地实例并对其进行自定义。
 
 [source,java,indent=0]
 ----
@@ -159,8 +166,13 @@ NOTE: The constructor arguments passed to `SpringApplication` are configuration 
 for spring beans. In most cases these will be references to `@Configuration` classes, but
 they could also be references to XML configuration or to packages that should be scanned.
 
+注意：被传入构造函数的参数是Spring组件的配置源。
+大多数情况下，这些是配置类(`@Configuration`)的引用，但也可以是被扫描的XML配置文件或所在包路径的引用。
+
 It is also possible to configure the `SpringApplication` using an `application.properties`
 file. See _<<boot-features-external-config>>_ for details.
+
+还可以使用`application.properties`文件来配置`SpringApplication`。
 
 For a complete list of the configuration options, see the
 {dc-spring-boot}/SpringApplication.{dc-ext}[`SpringApplication` Javadoc].
@@ -168,13 +180,17 @@ For a complete list of the configuration options, see the
 
 
 [[boot-features-fluent-builder-api]]
-=== Fluent builder API
+=== Fluent builder API/流式的构建者API
 If you need to build an `ApplicationContext` hierarchy (multiple contexts with a
 parent/child relationship), or if you just prefer using a '`fluent`' builder API, you
 can use the `SpringApplicationBuilder`.
 
+如果需要构建一个层次结构的应用上下文(`ApplicationContext`，父/子关系的多个上下文)，
+
 The `SpringApplicationBuilder` allows you to chain together multiple method calls, and
 includes `parent` and `child` methods that allow you to create a hierarchy.
+
+`SpringApplicationBuilder`允许多个方法调用链在一起，包括父和子的方法。
 
 For example:
 
@@ -188,6 +204,9 @@ Web components *must* be contained within the child context, and the same `Envir
 will be used for both parent and child contexts. See the
 {dc-spring-boot}/builder/SpringApplicationBuilder.{dc-ext}[`SpringApplicationBuilder`
 Javadoc] for full details.
+
+注意：当创建应用上下文的层次结构时，存在一些限制。
+例如，Web应用组件*必须*被包含在子上下文中，相同的环境属性可同时用于父和子上下文。
 
 
 
@@ -208,6 +227,8 @@ If you want those listeners to be registered automatically regardless of the way
 application is created you can add a `META-INF/spring.factories` file to your project
 and reference your listener(s) using the `org.springframework.context.ApplicationListener`
 key.
+如果你想这些监听器被自动地注册，可以添加`META-INF/spring.factories`文件并使用
+`org.springframework.context.ApplicationListener`键引用你的监听器。
 
 [indent=0]
 ----
@@ -234,39 +255,51 @@ Application events are sent in the following order, as your application runs:
 * `ApplicationEnvironmentPreparedEvent`：用于应用上下文的环境(`Environment`)已准备，但在创建上下文之前。
 * `ApplicationPreparedEvent`：在上下文刷新开始之前，但在组件定义已加载之后。
 * `ApplicationReadyEvent`：在上下文刷新和任何关联的回调已处理之后，表示应用程序可以服务请求。
-* `ApplicationFailedEvent`：在启动时出现了异常。
+* `ApplicationFailedEvent`：在启动出现了异常时。
 
 TIP: You often won't need to use application events, but it can be handy to know that they
 exist. Internally, Spring Boot uses events to handle a variety of tasks.
 
+提示：你通常不需要使用应用事件，但可以很方便地知道他们的存在。
+在内部，Boot使用事件来处理各种任务。
+
 
 
 [[boot-features-web-environment]]
-=== Web environment
+    === Web environment/Web环境
 A `SpringApplication` will attempt to create the right type of `ApplicationContext` on
 your behalf. By default, an `AnnotationConfigApplicationContext` or
 `AnnotationConfigEmbeddedWebApplicationContext` will be used, depending on whether you
 are developing a web application or not.
 
+`SpringApplication`会基于你的行为尝试创建正确类型的`ApplicationContext`。
+默认情况下，`AnnotationConfigApplicationContext`或
+`AnnotationConfigEmbeddedWebApplicationContext`会被使用，取决于是否是Web应用程序。
+
 The algorithm used to determine a '`web environment`' is fairly simplistic (based on the
 presence of a few classes). You can use `setWebEnvironment(boolean webEnvironment)` if
 you need to override the default.
 
+用于确定'`web环境`'的算法是相当简单的(基于几个类的存在)。
+
 It is also possible to take complete control of the `ApplicationContext` type that will
 be used by calling `setApplicationContextClass(...)`.
 
-TIP: It is often desirable to call `setWebEnvironment(false)` when using
+TIP/提示: It is often desirable to call `setWebEnvironment(false)` when using
 `SpringApplication` within a JUnit test.
+当在单元测试中使用`SpringApplication`时，调用`setWebEnvironment(false)`。
 
 
 
 [[boot-features-application-arguments]]
-=== Accessing application arguments
+=== Accessing application arguments/访问应用程序的参数
 If you need to access the application arguments that were passed to
 `SpringApplication.run(...)` you can inject a
 `org.springframework.boot.ApplicationArguments` bean. The `ApplicationArguments` interface
 provides access to both the raw `String[]` arguments as well as parsed `option` and
 `non-option` arguments:
+
+需要访问传入到`SpringApplication.run(...)`方法的应用程序参数，可以注入`org.springframework.boot.ApplicationArguments`组件。
 
 [source,java,indent=0]
 ----
@@ -287,18 +320,23 @@ provides access to both the raw `String[]` arguments as well as parsed `option` 
 	}
 ----
 
-TIP: Spring Boot will also register a `CommandLinePropertySource` with the Spring
+TIP/提示: Spring Boot will also register a `CommandLinePropertySource` with the Spring
 `Environment`. This allows you to also inject single application arguments using the
-`@Value` annotation.
+`@Value` annotation. 注册`Environment`的`CommandLinePropertySource`，
+允许你使用`@Value`注解注入单个应用程序参数。
 
 
 
 [[boot-features-command-line-runner]]
-=== Using the ApplicationRunner or CommandLineRunner
+=== Using the ApplicationRunner or CommandLineRunner/使用应用程序或命令行运行器
 If you need to run some specific code once the `SpringApplication` has started, you can
 implement the `ApplicationRunner` or `CommandLineRunner` interfaces. Both interfaces work
 in the same way and offer a single `run` method which will be called just before
 `SpringApplication.run(...)` completes.
+
+如果在`SpringApplication`启动后需要运行一些特定的代码，可以实现`ApplicationRunner`
+或`CommandLineRunner`接口。这两个接口只提供单个`run`方法，它将在
+`SpringApplication.run(...)`完成之前被调用。
 
 The `CommandLineRunner` interfaces provides access to application arguments as a simple
 string array, whereas the `ApplicationRunner` uses the `ApplicationArguments` interface
@@ -321,16 +359,19 @@ discussed above.
 
 You can additionally implement the `org.springframework.core.Ordered` interface or use the
 `org.springframework.core.annotation.Order` annotation if several `CommandLineRunner` or
-`ApplicationRunner` beans are defined that must be called in a specific order.
+`ApplicationRunner` beans are defined that must be called in a specific order/必须按照特定的顺序被调用.
 
 
 
 [[boot-features-application-exit]]
-=== Application exit
+=== Application exit/应用程序退出
 Each `SpringApplication` will register a shutdown hook with the JVM to ensure that the
 `ApplicationContext` is closed gracefully on exit. All the standard Spring lifecycle
 callbacks (such as the `DisposableBean` interface, or the `@PreDestroy` annotation) can
 be used.
+
+每个`SpringApplication`都会在JVM中注册一个关闭钩子，用来确保在应用程序退出时应用上下文被优雅地关闭。
+所有标准的Spring生命周期回调(比如`DisposableBean`接口或`@PreDestroy`注解)都可以使用。
 
 In addition, beans may implement the `org.springframework.boot.ExitCodeGenerator`
 interface if they wish to return a specific exit code when the application ends.
@@ -338,7 +379,7 @@ interface if they wish to return a specific exit code when the application ends.
 
 
 [[boot-features-application-admin]]
-=== Admin features
+=== Admin features/管理员功能
 It is possible to enable admin-related features for the application by specifying the
 `spring.application.admin.enabled` property. This exposes the
 {sc-spring-boot}/admin/SpringApplicationAdminMXBean.{sc-ext}[`SpringApplicationAdminMXBean`]
@@ -348,7 +389,7 @@ application remotely. This could also be useful for any service wrapper implemen
 TIP: If you want to know on which HTTP port the application is running, get the property
 with key `local.server.port`.
 
-NOTE: Take care when enabling this feature as the MBean exposes a method to shutdown the
-application.
+NOTE/注意: Take care when enabling this feature as the MBean exposes a method to shutdown the
+application. 不要暴露关闭应用程序的方法
 
 
