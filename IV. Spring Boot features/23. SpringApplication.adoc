@@ -7,7 +7,7 @@ The `SpringApplication` class provides a convenient way to bootstrap a Spring ap
 that will be started from a `main()` method. In many situations you can just delegate to
 the static `SpringApplication.run` method:
 
-`SpringApplication`类提供一种启动Spring应用程序的简便方式，从`main()`方法开始。
+`SpringApplication` 类提供一种启动Spring应用程序的简便方式，从 `main()` 方法开始。
 
 [source,java,indent=0]
 ----
@@ -46,7 +46,7 @@ a dedicated error message and a concrete action to fix the problem. For instance
 start a web application on port `8080` and that port is already in use, you should see
 something similar to the following:
 
-如果你的应用程序启动失败，注册的`FailureAnalyzers`有机会提供一个专门的错误信息和
+如果你的应用程序启动失败，注册的 `FailureAnalyzers` 有机会提供一个专门的错误信息和
 具体的行动来解决问题。
 
 [indent=0]
@@ -172,7 +172,7 @@ they could also be references to XML configuration or to packages that should be
 It is also possible to configure the `SpringApplication` using an `application.properties`
 file. See _<<boot-features-external-config>>_ for details.
 
-还可以使用`application.properties`文件来配置`SpringApplication`。
+还可以使用 `application.properties` 文件来配置 `SpringApplication`。
 
 For a complete list of the configuration options, see the
 {dc-spring-boot}/SpringApplication.{dc-ext}[`SpringApplication` Javadoc].
@@ -190,7 +190,7 @@ can use the `SpringApplicationBuilder`.
 The `SpringApplicationBuilder` allows you to chain together multiple method calls, and
 includes `parent` and `child` methods that allow you to create a hierarchy.
 
-`SpringApplicationBuilder`允许多个方法调用链在一起，包括父和子的方法。
+`SpringApplicationBuilder` 允许多个方法调用链在一起，包括父和子的方法。
 
 For example:
 
@@ -206,7 +206,7 @@ will be used for both parent and child contexts. See the
 Javadoc] for full details.
 
 注意：当创建应用上下文的层次结构时，存在一些限制。
-例如，Web应用组件*必须*被包含在子上下文中，相同的环境属性可同时用于父和子上下文。
+例如，Web应用组件 *必须* 被包含在子上下文中，相同的环境属性可同时用于父和子上下文。
 
 
 
@@ -227,8 +227,8 @@ If you want those listeners to be registered automatically regardless of the way
 application is created you can add a `META-INF/spring.factories` file to your project
 and reference your listener(s) using the `org.springframework.context.ApplicationListener`
 key.
-如果你想这些监听器被自动地注册，可以添加`META-INF/spring.factories`文件并使用
-`org.springframework.context.ApplicationListener`键引用你的监听器。
+如果你想这些监听器被自动地注册，可以添加 `META-INF/spring.factories` 文件并使用
+`org.springframework.context.ApplicationListener` 键引用你的监听器。
 
 [indent=0]
 ----
@@ -266,28 +266,28 @@ exist. Internally, Spring Boot uses events to handle a variety of tasks.
 
 
 [[boot-features-web-environment]]
-    === Web environment/Web环境
+=== Web environment/Web环境
 A `SpringApplication` will attempt to create the right type of `ApplicationContext` on
 your behalf. By default, an `AnnotationConfigApplicationContext` or
 `AnnotationConfigEmbeddedWebApplicationContext` will be used, depending on whether you
 are developing a web application or not.
 
-`SpringApplication`会基于你的行为尝试创建正确类型的`ApplicationContext`。
-默认情况下，`AnnotationConfigApplicationContext`或
-`AnnotationConfigEmbeddedWebApplicationContext`会被使用，取决于是否是Web应用程序。
+`SpringApplication` 会基于你的行为尝试创建正确类型的 `ApplicationContext`。
+默认情况下，`AnnotationConfigApplicationContext` 或
+`AnnotationConfigEmbeddedWebApplicationContext` 会被使用，取决于是否是Web应用程序。
 
 The algorithm used to determine a '`web environment`' is fairly simplistic (based on the
 presence of a few classes). You can use `setWebEnvironment(boolean webEnvironment)` if
 you need to override the default.
 
-用于确定'`web环境`'的算法是相当简单的(基于几个类的存在)。
+用于确定 '`web环境`' 的算法是相当简单的(基于几个类的存在)。
 
 It is also possible to take complete control of the `ApplicationContext` type that will
 be used by calling `setApplicationContextClass(...)`.
 
 TIP/提示: It is often desirable to call `setWebEnvironment(false)` when using
 `SpringApplication` within a JUnit test.
-当在单元测试中使用`SpringApplication`时，调用`setWebEnvironment(false)`。
+当在单元测试中使用 `SpringApplication` 时，调用 `setWebEnvironment(false)`。
 
 
 
@@ -299,7 +299,8 @@ If you need to access the application arguments that were passed to
 provides access to both the raw `String[]` arguments as well as parsed `option` and
 `non-option` arguments:
 
-需要访问传入到`SpringApplication.run(...)`方法的应用程序参数，可以注入`org.springframework.boot.ApplicationArguments`组件。
+需要访问传入到 `SpringApplication.run(...)` 方法的应用程序参数，
+可以注入 `org.springframework.boot.ApplicationArguments` 组件。
 
 [source,java,indent=0]
 ----
@@ -322,8 +323,8 @@ provides access to both the raw `String[]` arguments as well as parsed `option` 
 
 TIP/提示: Spring Boot will also register a `CommandLinePropertySource` with the Spring
 `Environment`. This allows you to also inject single application arguments using the
-`@Value` annotation. 注册`Environment`的`CommandLinePropertySource`，
-允许你使用`@Value`注解注入单个应用程序参数。
+`@Value` annotation.
+注册 `Environment` 的 `CommandLinePropertySource`，允许你使用 `@Value` 注解注入单个应用程序参数。
 
 
 
@@ -334,9 +335,9 @@ implement the `ApplicationRunner` or `CommandLineRunner` interfaces. Both interf
 in the same way and offer a single `run` method which will be called just before
 `SpringApplication.run(...)` completes.
 
-如果在`SpringApplication`启动后需要运行一些特定的代码，可以实现`ApplicationRunner`
-或`CommandLineRunner`接口。这两个接口只提供单个`run`方法，它将在
-`SpringApplication.run(...)`完成之前被调用。
+如果在 `SpringApplication` 启动后需要运行一些特定的代码，可以实现 `ApplicationRunner`
+或 `CommandLineRunner` 接口。这两个接口只提供单个 `run` 方法，它将在
+`SpringApplication.run(...)` 完成之前被调用。
 
 The `CommandLineRunner` interfaces provides access to application arguments as a simple
 string array, whereas the `ApplicationRunner` uses the `ApplicationArguments` interface
@@ -370,8 +371,8 @@ Each `SpringApplication` will register a shutdown hook with the JVM to ensure th
 callbacks (such as the `DisposableBean` interface, or the `@PreDestroy` annotation) can
 be used.
 
-每个`SpringApplication`都会在JVM中注册一个关闭钩子，用来确保在应用程序退出时应用上下文被优雅地关闭。
-所有标准的Spring生命周期回调(比如`DisposableBean`接口或`@PreDestroy`注解)都可以使用。
+每个 `SpringApplication` 都会在JVM中注册一个关闭钩子，用来确保在应用程序退出时应用上下文被优雅地关闭。
+所有标准的Spring生命周期回调(比如 `DisposableBean` 接口或 `@PreDestroy` 注解)都可以使用。
 
 In addition, beans may implement the `org.springframework.boot.ExitCodeGenerator`
 interface if they wish to return a specific exit code when the application ends.
